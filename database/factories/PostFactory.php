@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\User;
+use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -21,7 +22,7 @@ class PostFactory extends Factory
             //create data for user_id, title and body
             'user_id' => User::factory(),
             'title' => str(fake()->sentence)->beforeLast('.')->title(),
-            'body' => fake()->realText(600),
+            'body' => Collection::times(4, fn () => fake()->realText(1250))->join(PHP_EOL.PHP_EOL),
         ];
     }
 }
