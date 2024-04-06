@@ -1,55 +1,21 @@
 <?php
 
-// use Illuminate\Foundation\Testing\RefreshDatabase;
-// use Tests\TestCase;
+use App\Http\Resources\PostResource;
+use App\Models\Post;
+use Inertia\Testing\AssertableInertia;
 
-// class IndexTest extends TestCase
-// {
-//     use RefreshDatabase;
+use function Pest\Laravel\get;
 
-//     public function testPostsIndexRouteReturnsCorrectComponent()
-//     {
-//         $response = $this->get(route('posts.index'));
-
-//         $response->assertInertia(fn ($page) => $page->component('Posts/Index'));
-//     }
-
-//     public function testPostsArePassedToView()
-//     {
-
-//         $response = $this->get(route('posts.index'));
-
-//         $response->assertInertia(fn ($page) => $page->component('Posts/Index'));
-//     }
-
-
-// }
-
-use Tests\TestCase;
-use Inertia\Testing\Assert;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-
-class PostsIndexTest extends TestCase
-{
-    use RefreshDatabase;
-
-    public function testShouldReturnTheCorrectComponent()
-    {
-        $response = $this->get(route('posts.index'));
-
-        $response->assertInertia(fn ($page) => $page
+it('should return the correct component', function () {
+    $this->get(route('posts.index'))
+        ->assertInertia(fn (AssertableInertia $inertia) => $inertia
             ->component('Posts/Index', true)
         );
-    }
+});
 
-    public function testPassesPostsToTheView()
-    {
-        $response = $this->get(route('posts.index'));
+it('passes posts to the view', function () {
+    $posts = Post::factory(3)->create();
 
-        $response->assertInertia(fn ($page) => $page
-            ->has('posts')
-        );
-    }
-}
-
-
+    $this->get(route('posts.index'))
+        ->assertHasPaginatedResource('posts', PostResource::collection($posts->reverse()));
+});

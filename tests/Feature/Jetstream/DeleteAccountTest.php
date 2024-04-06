@@ -1,68 +1,29 @@
 <?php
 
-// use App\Models\User;
-// use Laravel\Jetstream\Features;
-
-// test('user accounts can be deleted', function () {
-//     $this->actingAs($user = User::factory()->create());
-
-//     $response = $this->delete('/user', [
-//         'password' => 'password',
-//     ]);
-
-//     expect($user->fresh())->toBeNull();
-// })->skip(function () {
-//     return ! Features::hasAccountDeletionFeatures();
-// }, 'Account deletion is not enabled.');
-
-// test('correct password must be provided before account can be deleted', function () {
-//     $this->actingAs($user = User::factory()->create());
-
-//     $response = $this->delete('/user', [
-//         'password' => 'wrong-password',
-//     ]);
-
-//     expect($user->fresh())->not->toBeNull();
-// })->skip(function () {
-//     return ! Features::hasAccountDeletionFeatures();
-// }, 'Account deletion is not enabled.');
-
 use App\Models\User;
 use Laravel\Jetstream\Features;
-use Illuminate\Foundation\Testing\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class DeleteAccountTest extends TestCase
-{
-    use RefreshDatabase;
+test('user accounts can be deleted', function () {
+    $this->actingAs($user = User::factory()->create());
 
-    public function testUserAccountsCanBeDeleted()
-    {
-        if (!Features::hasAccountDeletionFeatures()) {
-            $this->markTestSkipped('Account deletion is not enabled.');
-        }
+    $response = $this->delete('/user', [
+        'password' => 'password',
+    ]);
 
-        $this->actingAs($user = User::factory()->create());
+    expect($user->fresh())->toBeNull();
+})->skip(function () {
+    return ! Features::hasAccountDeletionFeatures();
+}, 'Account deletion is not enabled.');
 
-        $response = $this->delete('/user', [
-            'password' => 'password',
-        ]);
+test('correct password must be provided before account can be deleted', function () {
+    $this->actingAs($user = User::factory()->create());
 
-        $this->assertNull($user->fresh());
-    }
+    $response = $this->delete('/user', [
+        'password' => 'wrong-password',
+    ]);
 
-    public function testCorrectPasswordMustBeProvidedBeforeAccountCanBeDeleted()
-    {
-        if (!Features::hasAccountDeletionFeatures()) {
-            $this->markTestSkipped('Account deletion is not enabled.');
-        }
+    expect($user->fresh())->not->toBeNull();
+})->skip(function () {
+    return ! Features::hasAccountDeletionFeatures();
+}, 'Account deletion is not enabled.');
 
-        $this->actingAs($user = User::factory()->create());
-
-        $response = $this->delete('/user', [
-            'password' => 'wrong-password',
-        ]);
-
-        $this->assertNotNull($user->fresh());
-    }
-}
