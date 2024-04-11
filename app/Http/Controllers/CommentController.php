@@ -6,24 +6,19 @@ use App\Models\Post;
 use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Routing\Controller;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class CommentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+
+    use AuthorizesRequests;
+    public function __construct()
     {
-        //
+        $this->authorizeResource(Comment::class);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+    
 
     /**
      * Store a newly created resource in storage.
@@ -41,28 +36,18 @@ class CommentController extends Controller
         return to_route('posts.show', $post);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Comment $comment)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Comment $comment)
-    {
-        //
-    }
+    
 
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, Comment $comment)
     {
-        //
+        $data = $request->validate(['body' => ['required', 'string', 'max:2500']]);
+
+        $comment->update($data);
+
+        return to_route('posts.show', ['post' => $comment->post_id, 'page' => $request->query('page')]);
     }
 
     /**
@@ -70,7 +55,6 @@ class CommentController extends Controller
      */
     public function destroy(Request $request, Comment $comment)
     {
-        Gate::authorize('delete', $comment);
 
         $comment->delete();
 
