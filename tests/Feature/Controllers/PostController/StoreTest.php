@@ -8,7 +8,8 @@ use function Pest\Laravel\post;
 beforeEach(function () {
     $this->validData = [
         'title' => 'Hello World',
-        'body' => 'This is my very first post!'
+        'body' => 'This is my very first post! This is my very first post! This is my very first post!
+                   This is my very first post! This is my very first post! This is my very first post!'
     ];
 });
 

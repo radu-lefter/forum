@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import { Head, Link, router } from '@inertiajs/vue3';
+import { Head, Link, router, usePage } from '@inertiajs/vue3';
 import ApplicationMark from '@/Components/ApplicationMark.vue';
 import Banner from '@/Components/Banner.vue';
 import Dropdown from '@/Components/Dropdown.vue';
@@ -32,12 +32,18 @@ const menu = [
         name: "Dashboard",
         url: route('dashboard'),
         route: 'dashboard',
-        //when: () => usePage().props.auth.user,
+        when: () => usePage().props.auth.user,
     },
     {
         name: "Posts",
         url: route('posts.index'),
         route: 'posts.index',
+    },
+    {
+        name: "Create a Post",
+        url: route('posts.create'),
+        route: 'posts.create',
+        when: () => usePage().props.permissions.create_posts,
     }
 ];
 
