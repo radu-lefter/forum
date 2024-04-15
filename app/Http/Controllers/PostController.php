@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Resources\PostResource;
 use App\Http\Resources\CommentResource;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
@@ -49,18 +50,19 @@ class PostController extends Controller
             'user_id' => $request->user()->id,
         ]);
 
-        return to_route('posts.show', $post);
+        return redirect($post->showRoute());
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Post $post)
+    public function show(Request $request, Post $post)
     {
-        $post->load('user');
+        if (! Str::contains($post->showRoute(), $request->path())) {
+            return redirect($post->showRoute($request->query()), status: 301);
+        }
 
-        //$comments = $post->comments()->with('user')->latest()->latest('id')->paginate(10);
-    //dd($comments); // Add this line
+        $post->load('user');
 
         return inertia('Posts/Show', [
             'post' => fn () => PostResource::make($post),
