@@ -8,10 +8,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Str;
+use App\Models\Concerns\ConvertsMarkdownToHtml;
 
 class Post extends Model
 {
     use HasFactory;
+    use ConvertsMarkdownToHtml;
+
+    // protected static function booted(){
+    //     static::saving(fn (self $post) => $post->fill(['html' => str($post->body)->markdown()]));
+    // }
 
     //create belongs to relationship with users
     public function user(): BelongsTo

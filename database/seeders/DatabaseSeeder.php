@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
             ->recycle($users)
             ->create();
 
-        $radu = User::factory()->has(Post::factory(45))->withFixture()
+        $radu = User::factory()->has(Post::factory(45)->withFixture())
             ->has(Comment::factory(120))->recycle($posts)
             ->create([
                 'name' => 'Radu Bradu',
